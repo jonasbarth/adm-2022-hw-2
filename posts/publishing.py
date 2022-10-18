@@ -54,7 +54,7 @@ def find_posts_between(posts : pd.DataFrame, intervals):
     number_of_posts - a list of number of posts, where the indeces match those of the intervals.
     """
     number_of_posts = [_find_posts_between(posts, start, end) for start, end in intervals]
-    intervals_labels = list(map(lambda start, end : f"{start} - {end}"))
+    intervals_labels = list(map(lambda start_end : f"{start_end[0]} - {start_end[1]}", intervals))
     return intervals_labels, number_of_posts
 
 
@@ -69,7 +69,11 @@ def _find_posts_between(posts : pd.DataFrame, start_time, end_time):
     :returns
     the number of posts between the given interval
     """
-    interval_mask = posts.post_time >= start_time and posts.posttime <= end_time
+    start_time = pd.Timestamp(f"1900-01-01 {start_time}")
+    end_time = pd.Timestamp(f"1900-01-01 {end_time}")
+    start_time_mask = posts.post_time >= start_time
+    end_time_mask = posts.post_time <= end_time
+    interval_mask = start_time_mask & end_time_mask
     return len(posts.loc[interval_mask])
 
 
