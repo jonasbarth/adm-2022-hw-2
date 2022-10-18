@@ -20,7 +20,7 @@ def most_common_time():
     """
     all_times = []
 
-    for posts in read_post_time_data('data/instagram_posts.csv', nrows=4000000, chunksize=10000):
+    for posts in read_post_time_data('data/instagram_posts.csv', nrows=5000000, chunksize=10000):
         all_times.extend(posts.post_time.tolist())
 
     most_common_datetime = Counter(all_times).most_common(1)
@@ -40,7 +40,7 @@ def plot_posts_intervals(intervals):
     interval_labels = list(map(lambda start_end: f"{start_end[0]} - {start_end[1]}", intervals))
     number_of_posts = np.empty(len(intervals))
 
-    for posts in read_post_time_data('data/instagram_posts.csv'):
+    for posts in read_post_time_data('data/instagram_posts.csv', nrows=5000000, chunksize=10000):
         values = find_posts_between(posts, intervals)
         number_of_posts = np.add(number_of_posts, values)
 
