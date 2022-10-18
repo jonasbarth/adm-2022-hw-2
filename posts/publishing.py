@@ -1,18 +1,6 @@
 """Module that contains functions for the times at which users publish their posts"""
 import pandas as pd
-import matplotlib.pyplot as plt
-
-def most_common_time(posts : pd.DataFrame):
-    """Returns the most common time at which users publish their posts.
-
-    :arg
-    posts - a pandas dataframe containing the times at which users post.
-
-    :returns
-    the most common publishing post time found in the posts dataframe
-    """
-    most_common_datetime = posts.post_time.value_counts().idxmax()
-    return f"{most_common_datetime.hour}:{most_common_datetime.minute}:{most_common_datetime.second}"
+import numpy as np
 
 
 def date_time_to_time(datetime):
@@ -25,24 +13,7 @@ def date_time_to_time(datetime):
     return f"{hour}:{minutes}:{seconds}"
 
 
-def plot_posts_intervals(posts : pd.DataFrame, intervals):
-    """Returns a plot with the number of posts for each given interval.
-
-    :arg
-    posts - a pandas dataframe containing the times at which users post.
-    intervals - a list of tuples where each tuple contains the start and end time (start, end).
-
-    :return
-    a plot
-    """
-
-    intervals_labels, number_of_posts = find_posts_between(posts, intervals)
-
-    return plt.barh(intervals_labels, number_of_posts)
-
-
-
-def find_posts_between(posts : pd.DataFrame, intervals):
+def find_posts_between(posts: pd.DataFrame, intervals):
     """Finds posts with post times within the given list of inclusive intervals.
 
     :arg
@@ -51,14 +22,12 @@ def find_posts_between(posts : pd.DataFrame, intervals):
 
     :return
     intervals - a list of intervals as strings.
-    number_of_posts - a list of number of posts, where the indeces match those of the intervals.
     """
-    number_of_posts = [_find_posts_between(posts, start, end) for start, end in intervals]
-    intervals_labels = list(map(lambda start_end : f"{start_end[0]} - {start_end[1]}", intervals))
-    return intervals_labels, number_of_posts
+    number_of_posts = np.array([_find_posts_between(posts, start, end) for start, end in intervals])
+    return number_of_posts
 
 
-def _find_posts_between(posts : pd.DataFrame, start_time, end_time):
+def _find_posts_between(posts: pd.DataFrame, start_time, end_time):
     """Finds posts between the given inclusive start and  inclusive end interval.
 
     :arg
@@ -75,6 +44,3 @@ def _find_posts_between(posts : pd.DataFrame, start_time, end_time):
     end_time_mask = posts.post_time <= end_time
     interval_mask = start_time_mask & end_time_mask
     return len(posts.loc[interval_mask])
-
-
-
