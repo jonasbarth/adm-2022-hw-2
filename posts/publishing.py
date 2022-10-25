@@ -6,6 +6,7 @@ import numpy as np
 def date_time_to_time(datetime):
     """Removes the date from the datetime object and returns a time in format HH:MM:SS."""
 
+    datetime = pd.Timestamp(datetime)
     hour = f"{datetime.hour}" if datetime.hour > 9 else f"{0}{datetime.hour}"
     minutes = f"{datetime.minute}" if datetime.minute > 9 else f"{0}{datetime.minute}"
     seconds = f"{datetime.second}" if datetime.second > 9 else f"{0}{datetime.second}"
