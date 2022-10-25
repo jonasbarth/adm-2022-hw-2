@@ -1,9 +1,10 @@
 """Module for handling posts data"""
 import pandas as pd
 from .publishing import date_time_to_time
+import numpy as np
 
 
-def read_post_time_data(path : str, chunksize=1000, nrows=1000):
+def read_post_time_data(path: str, chunksize=1000, nrows=1000):
     """Returns a generator for sanitised post data.
 
     :arg
@@ -31,9 +32,14 @@ def sanitise(posts: pd.DataFrame):
     :return
     the sanitised pandas dataframe.
     """
-
     posts = posts[posts.cts.notna()]
-    posts["post_time"] = posts.cts.apply(date_time_to_time)
-    posts.post_time = pd.to_datetime(posts.post_time, format="%H:%M:%S")
+    posts.cts = np.vectorize(normalise_date)(posts.cts)
 
     return posts
+
+
+def normalise_date(datetime):
+    """Normalises a single datetime to start from 1970:01:01."""
+    time = pd.Timestamp(datetime)
+    time = time - pd.Timestamp(time.year, time.month, time.day)
+    return pd.Timestamp(0) + time
