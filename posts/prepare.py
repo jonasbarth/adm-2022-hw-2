@@ -1,7 +1,6 @@
 """Module for handling posts data"""
-import pandas as pd
-from .publishing import date_time_to_time
 import numpy as np
+import pandas as pd
 
 
 def read_post_time_data(path: str, chunksize=1000, nrows=1000):
@@ -33,6 +32,13 @@ def sanitise(posts: pd.DataFrame):
     the sanitised pandas dataframe.
     """
     posts = posts[posts.cts.notna()]
+    posts.cts = np.vectorize(normalise_date)(posts.cts)
+
+    return posts
+
+
+def normalise_post_times(posts: pd.DataFrame):
+    """Normalises the post times so that the date is the UNIX start date."""
     posts.cts = np.vectorize(normalise_date)(posts.cts)
 
     return posts
