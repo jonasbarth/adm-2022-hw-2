@@ -3,14 +3,6 @@ import numpy as np
 import pandas as pd
 
 
-def date_time_to_time(datetime):
-    """Removes the date from the datetime object and returns a time in format HH:MM:SS."""
-
-    datetime = pd.Timestamp(datetime)
-    hour = f"{datetime.hour}" if datetime.hour > 9 else f"{0}{datetime.hour}"
-    minutes = f"{datetime.minute}" if datetime.minute > 9 else f"{0}{datetime.minute}"
-    seconds = f"{datetime.second}" if datetime.second > 9 else f"{0}{datetime.second}"
-
 def find_number_of_posts_between(posts: pd.DataFrame, intervals):
     """Finds posts with post times within the given list of inclusive intervals.
 
@@ -37,20 +29,6 @@ def _find_number_of_posts_between(posts: pd.DataFrame, start_time, end_time):
     the number of posts between the given interval
     """
     return len(find_posts_between(posts, start_time, end_time))
-
-
-def find_avg_number_of_likes(posts: pd.DataFrame, start_time, end_time):
-    """Finds the average number of likes for posts in the given interval."""
-    posts = find_posts_between(posts, start_time, end_time)
-
-    return posts.numbr_likes.sum() / len(posts)
-
-
-def find_avg_number_of_comments(posts: pd.DataFrame, start_time, end_time):
-    """Finds the average number of comments for posts in the given interval."""
-    posts = find_posts_between(posts, start_time, end_time)
-
-    return posts.number_comments.sum() / len(posts)
 
 
 def find_posts_between(posts : pd.DataFrame, start_time, end_time):

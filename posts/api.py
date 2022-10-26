@@ -41,3 +41,18 @@ def plot_posts_intervals(posts: pd.DataFrame, intervals):
     number_of_posts.reverse()
     return plt.barh(interval_labels, number_of_posts)
 
+
+def timedelta_to_days_minutes(timedelta):
+    """Converts a timedelta to days and minutes.
+
+    :args
+    timestamp - a pandas timestamp
+
+    :returns
+    (days, minutes) - a tuple containing the days and minutes of the timedelta
+    """
+
+    minutes = timedelta.components[1] * 60 + timedelta.components[2]
+
+    return timedelta.days, minutes
+
