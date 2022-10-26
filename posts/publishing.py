@@ -36,24 +36,21 @@ def _find_number_of_posts_between(posts: pd.DataFrame, start_time, end_time):
     :returns
     the number of posts between the given interval
     """
-    start_time = pd.Timestamp(f"1900-01-01 {start_time}")
-    end_time = pd.Timestamp(f"1900-01-01 {end_time}")
-    start_time_mask = posts.cts >= start_time
-    end_time_mask = posts.cts <= end_time
-    interval_mask = start_time_mask & end_time_mask
-    return len(posts.loc[interval_mask])
+    return len(find_posts_between(posts, start_time, end_time))
 
 
-def find_number_of_likes(start_time, end_time):
-    posts = find_posts_between(['numbr_likes'], start_time, end_time)
+def find_avg_number_of_likes(posts: pd.DataFrame, start_time, end_time):
+    """Finds the average number of likes for posts in the given interval."""
+    posts = find_posts_between(posts, start_time, end_time)
 
-    return posts.numbr_likes.sum()
+    return posts.numbr_likes.sum() / len(posts)
 
 
-def find_number_of_comments(start_time, end_time):
-    posts = find_posts_between(['number_comments'], start_time, end_time)
+def find_avg_number_of_comments(posts: pd.DataFrame, start_time, end_time):
+    """Finds the average number of comments for posts in the given interval."""
+    posts = find_posts_between(posts, start_time, end_time)
 
-    return posts.number_comments.sum()
+    return posts.number_comments.sum() / len(posts)
 
 
 def find_posts_between(posts : pd.DataFrame, start_time, end_time):
@@ -69,10 +66,17 @@ def find_posts_between(posts : pd.DataFrame, start_time, end_time):
     """
     start_time = pd.Timestamp(f"1970-01-01 {start_time}")
     end_time = pd.Timestamp(f"1970-01-01 {end_time}")
-    start_time_mask = posts.cts >= start_time
-    end_time_mask = posts.cts <= end_time
-    interval_mask = start_time_mask & end_time_mask
+    start_time_hour = posts.cts.dt.hour >= start_time.hour
+    start_time_minute = posts.cts.dt.minute >= start_time.minute
+    start_time_second = posts.cts.dt.second >= start_time.second
 
+    end_time_hour = posts.cts.dt.hour <= end_time.hour
+    end_time_minute = posts.cts.dt.minute <= end_time.minute
+    end_time_second = posts.cts.dt.second <= end_time.second
+
+    start_time_mask = start_time_hour & start_time_minute & start_time_second
+    end_time_mask = end_time_hour & end_time_minute & end_time_second
+    interval_mask = start_time_mask & end_time_mask
     posts_in_interval = posts.loc[interval_mask]
 
     return posts_in_interval
