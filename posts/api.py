@@ -2,6 +2,7 @@
 from collections import Counter
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import pandas as pd
 
 from .publishing import find_number_of_posts_between
@@ -37,9 +38,13 @@ def plot_posts_intervals(posts: pd.DataFrame, intervals):
     interval_labels = list(map(lambda start_end: f"{start_end[0]} - {start_end[1]}", intervals))
     number_of_posts = find_number_of_posts_between(posts, intervals)
 
-    interval_labels.reverse()
-    number_of_posts.reverse()
-    return plt.barh(interval_labels, number_of_posts)
+    interval_labels = interval_labels[::-1]
+    number_of_posts = number_of_posts[::-1]
+    plt.barh(interval_labels, number_of_posts)
+    plt.title("Number of posts per time interval")
+    plt.xlabel("Number of posts")
+    plt.ylabel("Time interval")
+    plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
 
 
 def timedelta_to_days_minutes(timedelta):
