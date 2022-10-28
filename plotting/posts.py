@@ -71,3 +71,29 @@ def plot_followers_following_post_freq(followers, following, frequency, log, tit
     plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
 
     plt.colorbar(label='Number of following');
+
+
+def plot_likes_comments_for_intervals(intervals, likes, comments):
+    """Plots a vertical bar chart with grouped bars of likes and comments for each interval."""
+    label_locations = np.arange(len(intervals))
+    bar_width = 0.35
+
+    fig, ax = plt.subplots()
+    fig.set_size_inches(10, 8)
+
+    bar_likes = ax.barh(label_locations - bar_width / 2, likes, bar_width, label='Average number of likes')
+    bar_comments = ax.barh(label_locations + bar_width / 2, comments, bar_width, label='Average number of comments')
+
+    ax.set_ylabel('Time intervals')
+    ax.set_yticks(label_locations, intervals)
+
+    ax.set_xlabel('Count')
+    ax.set_title('Average number of likes and comments per time interval')
+    ax.legend()
+
+    ax.bar_label(bar_likes, padding=3)
+    ax.bar_label(bar_comments, padding=3)
+
+    fig.tight_layout()
+
+    plt.show()
