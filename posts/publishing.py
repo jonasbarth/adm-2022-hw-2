@@ -58,3 +58,40 @@ def find_posts_between(posts : pd.DataFrame, start_time, end_time):
     posts_in_interval = posts.loc[interval_mask]
 
     return posts_in_interval
+
+
+def find_avg_post_time(posts: pd.DataFrame, profiles: pd.DataFrame):
+    filtered_posts = posts.dropna()
+    filtered_posts = filtered_posts[filtered_posts.profile_id.isin(profiles.profile_id)]
+    sorted_posts = filtered_posts.sort_values(by='profile_id')
+    profiles_with_posts = profiles[profiles.profile_id.isin(sorted_posts.profile_id.unique())]
+    profiles_with_posts['true_n_posts'] = sorted_posts.groupby('profile_id')['profile_id'].count().values
+
+    sorted_post_times = sorted_posts.cts.values
+
+    # Find the indeces that will be used for finding posts
+    profiles_with_posts['start_index'] = profiles_with_posts.true_n_posts.shift(1).cumsum().astype('Int64')
+    profiles_with_posts.iloc[0, -1] = 0
+
+    def find_max_min_time_stamps(profile_id, n_posts, start_index):
+        """Finds the max and minimum post times in the sorted_post_times dataframe."""
+        start_index = int(start_index)
+        n_posts = int(n_posts)
+        profile_post_times = sorted_post_times[start_index:start_index + n_posts]
+
+        min_post_time = profile_post_times.min()
+        max_post_time = profile_post_times.max()
+
+        return max_post_time, min_post_time
+
+    max_post, min_post = np.vectorize(find_max_min_time_stamps)(profiles_with_posts.profile_id, \
+                                                                profiles_with_posts.true_n_posts, \
+                                                                profiles_with_posts.start_index)
+
+    profiles_with_posts['max_post'] = max_post
+    profiles_with_posts['min_post'] = min_post
+
+    profiles_with_posts['post_time_delta'] = profiles_with_posts.max_post - profiles_with_posts.min_post
+    profiles_with_posts['avg_post_delta'] = profiles_with_posts.post_time_delta / (profiles_with_posts.true_n_posts - 1)
+
+    return profiles_with_posts
