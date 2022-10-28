@@ -25,28 +25,6 @@ def most_common_times(posts : pd.DataFrame):
     return times, post_frequency
 
 
-def plot_posts_intervals(posts: pd.DataFrame, intervals):
-    """Returns a plot with the number of posts for each given interval.
-
-    :arg
-    intervals - a list of tuples where each tuple contains the start and end time (start, end).
-
-    :return
-    a plot where the intervals are sorted in ascending order and the respective number of posts in that interval.
-    """
-    intervals.sort()
-    interval_labels = list(map(lambda start_end: f"{start_end[0]} - {start_end[1]}", intervals))
-    number_of_posts = find_number_of_posts_between(posts, intervals)
-
-    interval_labels = interval_labels[::-1]
-    number_of_posts = number_of_posts[::-1]
-    plt.barh(interval_labels, number_of_posts)
-    plt.title("Number of posts per time interval")
-    plt.xlabel("Number of posts")
-    plt.ylabel("Time interval")
-    plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
-
-
 def timedelta_to_days_minutes(timedelta):
     """Converts a timedelta to days and minutes.
 
