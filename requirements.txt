@@ -1,3 +1,6 @@
 matplotlib
 pandas
 notebook
+statistics
+datatable
+seaborn
