@@ -9,6 +9,7 @@ The main components of the repository are:
 * `docs`: folder containing source and exported diagram files.
 * `plotting`: a python package containing functions related to plotting instagram data.
 * `posts`: a python package containing functions related to instagram post data. 
+* `CommandLine.sh`: a bash script that retrieves the first `n` posts with descriptions longer than `l` characters and outputs the profiles that posted them.
 
 
 # Getting started
