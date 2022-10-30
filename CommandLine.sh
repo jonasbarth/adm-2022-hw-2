@@ -30,6 +30,6 @@ do
   then
           echo "User was not found!"
   else
-          grep $i $profiles_dataset_path | awk -F '\t' '{print $3}' 
+          grep $i "$profiles_dataset_path" | awk -F '\t' '{print $3}' 
   fi
 done
