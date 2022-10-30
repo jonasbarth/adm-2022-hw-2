@@ -1,6 +1,11 @@
 # Introduction
 This repository contains solutions to [homework 2](https://github.com/lucamaiano/ADM/tree/master/2022/Homework_2) for the 2022 class of  Algorithms for Data Mining at La Sapienza.
 
+# Contributors:
+* Gabriele Tromboni
+* Ludovica Mazza
+* Jonas Barth
+
 # Structure
 
 The main components of the repository are:
