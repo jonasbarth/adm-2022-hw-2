@@ -5,14 +5,16 @@
 first_n_posts=10
 len_description=100
 posts_dataset_path=''
+profiles_dataset_path=''
 
 # Parsing flags
-while getopts 'n:l:p:' flag; do
+while getopts 'n:l:p:q' flag; do
   case "${flag}" in
     n) first_n_posts="${OPTARG}" ;;
     l) len_descriptions="${OPTARG}" ;;
     p) posts_dataset_path="${OPTARG}" ;;
-    *) echo "Please specify the number of posts (-n), length of description (-l), and the path to the posts dataset (-p)."
+    q) profiles_dataset_path="${OPTARG}" ;;
+    *) echo "Please specify the number of posts (-n), length of description (-l), the path to the posts dataset (-p), and the path to the profiles dataset (-q)."
        exit 1 ;;
   esac
 done
@@ -28,6 +30,6 @@ do
   then
           echo "User was not found!"
   else
-          grep $i "instagram_profiles.csv" | awk -F '\t' '{print $3}' 
+          grep $i $profiles_dataset_path | awk -F '\t' '{print $3}' 
   fi
 done
